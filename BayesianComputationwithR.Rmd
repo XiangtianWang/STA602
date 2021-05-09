@@ -1,0 +1,61 @@
+---
+title: "Study"
+author: "Tim Wang"
+date: "5/3/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(LearnBayes)
+```
+
+## 1.2 Exploring the student dataset
+
+```{r student}
+data("studentdata")
+studentdata[1,]
+attach(studentdata)
+t<-table(Drink)
+barplot(t,xlab="Drink Type", ylab = "Count")
+hours.sleep<-WakeUp-ToSleep
+hist(hours.sleep)
+boxplot(hours.sleep~Gender)
+plot(jitter(ToSleep),jitter(hours.sleep))
+fit<- lm(hours.sleep~ToSleep)
+abline(fit)
+
+
+
+
+```
+
+## 1.3 Exploring the Robustness of the t Statistic
+### 1.3.1
+$$T=\frac{\bar X - \bar Y}{s_p \sqrt{1/m+1/n}}$$
+$$ s_p = \sqrt{\frac{(m-1)s_x ^2 +(n-1)S_y ^2}{m-n+2}}$$
+will reject $H_0: \mu_x=\mu_y$ when $|T| \geq t_{n+m-2, \alpha/2}$
+
+
+```{r t-test, echo=FALSE}
+x<-rnorm(10,50,10)
+y<-rnorm(10,50,10)
+m<-length(x)
+n<-length(y)
+sp<-sqrt(((m-1)*sd(x)^2+(n-1)*sd(y)^2)/(m-n+2))
+t.stat<-((mean(x)-mean(y))/(sp*sqrt(1/m+1/n)))
+
+t.statisitc<- function(x,y){
+  m<-length(x)
+  n<-length(y)
+  sp<-sqrt(((m-1)*sd(x)^2+(n-1)*sd(y)^2)/(m-n+2))
+  t.stat<-((mean(x)-mean(y))/(sp*sqrt(1/m+1/n)))
+  return(t.stat)
+}
+
+
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
